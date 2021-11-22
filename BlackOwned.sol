@@ -152,6 +152,10 @@ contract BlackOwned is ERC20, Ownable, Shared {
         marketingFee = value;
     }
     
+    function setBlackHiveFee(uint256 value) external onlyOwner {
+        blackHiveFee = value;
+    }
+    
     function setBlacklistTimeout(uint256 value) external onlyOwner{
         blacklistTimeout = value;
     }
@@ -272,13 +276,10 @@ contract BlackOwned is ERC20, Ownable, Shared {
     }
 
     function swapAndSendToFee(uint256 tokens, address feeAddress) private  {
-        uint256 initialBalance = address(this).balance;
-        swapTokensForEth(tokens);
-        uint256 newBalance = address(this).balance - initialBalance;
-        (bool success, ) = feeAddress.call{ value: newBalance }("");
-        require (success, "BlackOwned: Payment to marketing wallet failed");
+        uint256 newBalance = swapTokensForEth(tokens);
+       payable(feeAddress).sendValue (newBalance);
     }
-
+    
     function swapAndLiquify(uint256 tokens) private {
        // split the contract balance into halves
         uint256 half = tokens / 2;
