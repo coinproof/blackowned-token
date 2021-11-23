@@ -310,7 +310,6 @@ contract BlackOwned is ERC20, Ownable, Shared {
         );
         if (ethAmount - ethFromLiquidity > 0)
             payable(marketingWalletAddress).sendValue(ethAmount - ethFromLiquidity);
-            payable(blackHiveAddress).sendValue(ethAmount - ethFromLiquidity);
     }
 
     function swapTokensForEth(uint256 tokenAmount) private returns (uint256) {
